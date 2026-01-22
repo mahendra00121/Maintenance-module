@@ -112,10 +112,10 @@ export default function PMPage() {
             </div>
 
             <Tabs defaultValue="schedule" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
-                    <TabsTrigger value="schedule">PM Schedule</TabsTrigger>
-                    <TabsTrigger value="ticket">PM Ticket</TabsTrigger>
-                    <TabsTrigger value="maintenance">PM Maintenance</TabsTrigger>
+                <TabsList className="flex flex-col sm:grid w-full sm:grid-cols-3 h-auto sm:max-w-[600px]">
+                    <TabsTrigger value="schedule" className="w-full">PM Schedule</TabsTrigger>
+                    <TabsTrigger value="ticket" className="w-full">PM Ticket</TabsTrigger>
+                    <TabsTrigger value="maintenance" className="w-full">PM Maintenance</TabsTrigger>
                 </TabsList>
 
                 {/* --- 1. PM SCHEDULE TAB --- */}
@@ -125,10 +125,10 @@ export default function PMPage() {
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <CardTitle>Preventive Maintenance Schedule</CardTitle>
                                 <div className="flex items-center gap-4 w-full md:w-auto">
-                                    <div className="grid grid-cols-3 gap-2 w-full md:w-auto">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 w-full md:w-auto">
                                         <Select>
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Department: Select" />
+                                            <SelectTrigger className="w-full md:w-[150px]">
+                                                <SelectValue placeholder="Dept" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="press">Printing</SelectItem>
@@ -136,8 +136,8 @@ export default function PMPage() {
                                             </SelectContent>
                                         </Select>
                                         <Select>
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Machine: Select" />
+                                            <SelectTrigger className="w-full md:w-[150px]">
+                                                <SelectValue placeholder="Machine" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="m1">RMGT-2</SelectItem>
@@ -145,7 +145,7 @@ export default function PMPage() {
                                             </SelectContent>
                                         </Select>
                                         <Select defaultValue="jan">
-                                            <SelectTrigger className="w-[180px]">
+                                            <SelectTrigger className="w-full md:w-[120px]">
                                                 <SelectValue placeholder="Month" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -167,13 +167,13 @@ export default function PMPage() {
                                             <DialogDescription>Add a new preventive maintenance slot.</DialogDescription>
                                         </DialogHeader>
                                         <div className="grid gap-4 py-4">
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label className="text-right">Machine</Label>
+                                            <div className="grid grid-cols-1 gap-2">
+                                                <Label>Machine</Label>
                                                 <Select
                                                     value={newSchedule.machine}
                                                     onValueChange={(val) => setNewSchedule({ ...newSchedule, machine: val })}
                                                 >
-                                                    <SelectTrigger className="col-span-3">
+                                                    <SelectTrigger className="w-full">
                                                         <SelectValue placeholder="Select Machine" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -183,13 +183,13 @@ export default function PMPage() {
                                                     </SelectContent>
                                                 </Select>
                                             </div>
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label className="text-right">Type</Label>
+                                            <div className="grid grid-cols-1 gap-2">
+                                                <Label>Type</Label>
                                                 <Select
                                                     value={newSchedule.type}
                                                     onValueChange={(val) => setNewSchedule({ ...newSchedule, type: val })}
                                                 >
-                                                    <SelectTrigger className="col-span-3">
+                                                    <SelectTrigger className="w-full">
                                                         <SelectValue placeholder="Select Type" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -200,11 +200,11 @@ export default function PMPage() {
                                                     </SelectContent>
                                                 </Select>
                                             </div>
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label className="text-right">Date</Label>
+                                            <div className="grid grid-cols-1 gap-2">
+                                                <Label>Date</Label>
                                                 <Input
                                                     type="date"
-                                                    className="col-span-3"
+                                                    className="w-full"
                                                     value={newSchedule.date}
                                                     onChange={(e) => setNewSchedule({ ...newSchedule, date: e.target.value })}
                                                 />
@@ -223,41 +223,43 @@ export default function PMPage() {
                         </CardHeader>
                         <CardContent>
                             {/* Calendar Grid Simulation */}
-                            <div className="border rounded-md overflow-hidden bg-white">
-                                <div className="grid grid-cols-7 bg-blue-100 divide-x text-center font-semibold text-sm py-2 text-blue-900">
-                                    <div>Monday</div>
-                                    <div>Tuesday</div>
-                                    <div>Wednesday</div>
-                                    <div>Thursday</div>
-                                    <div>Friday</div>
-                                    <div>Saturday</div>
-                                    <div>Sunday</div>
-                                </div>
-                                <div className="grid grid-cols-7 divide-x divide-y auto-rows-[minmax(100px,auto)]">
-                                    {/* Empty cells for dates before Jan 1st (Jan 1 is Wednesday) */}
-                                    <div className="p-2 bg-slate-50"></div>
-                                    <div className="p-2 bg-slate-50"></div>
+                            <div className="overflow-x-auto">
+                                <div className="border rounded-md min-w-[600px] overflow-hidden bg-white">
+                                    <div className="grid grid-cols-7 bg-blue-100 divide-x text-center font-semibold text-sm py-2 text-blue-900">
+                                        <div>Monday</div>
+                                        <div>Tuesday</div>
+                                        <div>Wednesday</div>
+                                        <div>Thursday</div>
+                                        <div>Friday</div>
+                                        <div>Saturday</div>
+                                        <div>Sunday</div>
+                                    </div>
+                                    <div className="grid grid-cols-7 divide-x divide-y auto-rows-[minmax(100px,auto)]">
+                                        {/* Empty cells for dates before Jan 1st (Jan 1 is Wednesday) */}
+                                        <div className="p-2 bg-slate-50"></div>
+                                        <div className="p-2 bg-slate-50"></div>
 
-                                    {/* Days 1-31 */}
-                                    {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
-                                        const daySchedules = getScheduleForDay(day);
-                                        return (
-                                            <div key={day} className="p-2 relative hover:bg-slate-50 transition-colors h-24">
-                                                <span className="absolute top-2 right-2 text-sm text-slate-400 font-medium">{day}</span>
-                                                <div className="mt-6 flex flex-col gap-1">
-                                                    {daySchedules.map((s) => (
-                                                        <div key={s.id} className="bg-blue-100 text-blue-800 text-[10px] p-1 rounded border border-blue-200 truncate cursor-pointer hover:bg-blue-200" title={`${s.machine} - ${s.type}`}>
-                                                            {s.machine}
-                                                        </div>
-                                                    ))}
+                                        {/* Days 1-31 */}
+                                        {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
+                                            const daySchedules = getScheduleForDay(day);
+                                            return (
+                                                <div key={day} className="p-2 relative hover:bg-slate-50 transition-colors h-24">
+                                                    <span className="absolute top-2 right-2 text-sm text-slate-400 font-medium">{day}</span>
+                                                    <div className="mt-6 flex flex-col gap-1">
+                                                        {daySchedules.map((s) => (
+                                                            <div key={s.id} className="bg-blue-100 text-blue-800 text-[10px] p-1 rounded border border-blue-200 truncate cursor-pointer hover:bg-blue-200" title={`${s.machine} - ${s.type}`}>
+                                                                {s.machine}
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })}
+                                            );
+                                        })}
 
-                                    {/* Remaining empty cells to fill the grid (if needed, simplified here) */}
-                                    <div className="p-2 bg-slate-50"></div>
-                                    <div className="p-2 bg-slate-50"></div>
+                                        {/* Remaining empty cells to fill the grid (if needed, simplified here) */}
+                                        <div className="p-2 bg-slate-50"></div>
+                                        <div className="p-2 bg-slate-50"></div>
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>
@@ -269,52 +271,54 @@ export default function PMPage() {
                     <Card>
                         <CardHeader>
                             <CardTitle>Preventive Maintenance Ticket</CardTitle>
-                            <div className="flex gap-4 mt-4">
+                            <div className="flex flex-col md:flex-row gap-4 mt-4">
                                 <div className="flex items-center gap-2">
-                                    <Label>From</Label>
-                                    <Input type="date" className="w-[150px]" />
+                                    <Label className="min-w-fit">From</Label>
+                                    <Input type="date" className="w-full md:w-[150px]" />
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Label>To</Label>
-                                    <Input type="date" className="w-[150px]" />
+                                    <Label className="min-w-fit">To</Label>
+                                    <Input type="date" className="w-full md:w-[150px]" />
                                 </div>
-                                <div className="relative w-72 ml-auto">
+                                <div className="relative w-full md:w-72 md:ml-auto">
                                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                                     <Input placeholder="Search..." className="pl-8" />
                                 </div>
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <Table>
-                                <TableHeader className="bg-blue-50/50">
-                                    <TableRow>
-                                        <TableHead>PM Ticket No.</TableHead>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>Department</TableHead>
-                                        <TableHead>Machine</TableHead>
-                                        <TableHead>PM Type</TableHead>
-                                        <TableHead>Scheduled Date & Time</TableHead>
-                                        <TableHead>Actual Start Date & Time</TableHead>
-                                        <TableHead>Schedule End Date & Time</TableHead>
-                                        <TableHead>Actual End Date & Time</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {pmTickets.map(ticket => (
-                                        <TableRow key={ticket.id}>
-                                            <TableCell className="font-medium">{ticket.id}</TableCell>
-                                            <TableCell>{ticket.date}</TableCell>
-                                            <TableCell>{ticket.dept}</TableCell>
-                                            <TableCell>{ticket.machine}</TableCell>
-                                            <TableCell>{ticket.type}</TableCell>
-                                            <TableCell>{ticket.scheduled}</TableCell>
-                                            <TableCell>{ticket.actualStart}</TableCell>
-                                            <TableCell>{ticket.scheduledEnd}</TableCell>
-                                            <TableCell>{ticket.actualEnd}</TableCell>
+                            <div className="overflow-x-auto">
+                                <Table>
+                                    <TableHeader className="bg-blue-50/50">
+                                        <TableRow>
+                                            <TableHead>PM Ticket No.</TableHead>
+                                            <TableHead>Date</TableHead>
+                                            <TableHead>Department</TableHead>
+                                            <TableHead>Machine</TableHead>
+                                            <TableHead>PM Type</TableHead>
+                                            <TableHead>Scheduled Date & Time</TableHead>
+                                            <TableHead>Actual Start Date & Time</TableHead>
+                                            <TableHead>Schedule End Date & Time</TableHead>
+                                            <TableHead>Actual End Date & Time</TableHead>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {pmTickets.map(ticket => (
+                                            <TableRow key={ticket.id}>
+                                                <TableCell className="font-medium">{ticket.id}</TableCell>
+                                                <TableCell>{ticket.date}</TableCell>
+                                                <TableCell>{ticket.dept}</TableCell>
+                                                <TableCell>{ticket.machine}</TableCell>
+                                                <TableCell>{ticket.type}</TableCell>
+                                                <TableCell>{ticket.scheduled}</TableCell>
+                                                <TableCell>{ticket.actualStart}</TableCell>
+                                                <TableCell>{ticket.scheduledEnd}</TableCell>
+                                                <TableCell>{ticket.actualEnd}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -322,9 +326,9 @@ export default function PMPage() {
                 {/* --- 3. PM MAINTENANCE TAB --- */}
                 <TabsContent value="maintenance" className="space-y-4">
                     {/* Status Filters */}
-                    <div className="flex items-center space-x-6 p-4 bg-card rounded-lg border shadow-sm">
-                        <span className="font-semibold text-sm">Filter Status:</span>
-                        <RadioGroup defaultValue="all" value={maintenanceFilter} onValueChange={setMaintenanceFilter} className="flex items-center gap-6">
+                    <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-6 p-4 bg-card rounded-lg border shadow-sm">
+                        <span className="font-semibold text-sm mb-2 md:mb-0">Filter Status:</span>
+                        <RadioGroup defaultValue="all" value={maintenanceFilter} onValueChange={setMaintenanceFilter} className="flex flex-wrap items-center gap-4 md:gap-6">
                             <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="all" id="pm_r1" />
                                 <Label htmlFor="pm_r1">All</Label>
@@ -350,36 +354,38 @@ export default function PMPage() {
 
                     <Card>
                         <CardContent className="pt-6">
-                            <Table>
-                                <TableHeader className="bg-blue-50/50">
-                                    <TableRow>
-                                        <TableHead>PM Ticket No.</TableHead>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>Department</TableHead>
-                                        <TableHead>Machine</TableHead>
-                                        <TableHead>PM Type</TableHead>
-                                        <TableHead>Scheduled Date & Time</TableHead>
-                                        <TableHead>Actual Start Date & Time</TableHead>
-                                        <TableHead>Schedule End Date & Time</TableHead>
-                                        <TableHead>Actual End Date & Time</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {pmTickets.map(ticket => (
-                                        <TableRow key={ticket.id}>
-                                            <TableCell className="font-medium">{ticket.id}</TableCell>
-                                            <TableCell>{ticket.date}</TableCell>
-                                            <TableCell>{ticket.dept}</TableCell>
-                                            <TableCell>{ticket.machine}</TableCell>
-                                            <TableCell>{ticket.type}</TableCell>
-                                            <TableCell>{ticket.scheduled}</TableCell>
-                                            <TableCell>{ticket.actualStart}</TableCell>
-                                            <TableCell>{ticket.scheduledEnd}</TableCell>
-                                            <TableCell>{ticket.actualEnd}</TableCell>
+                            <div className="overflow-x-auto">
+                                <Table>
+                                    <TableHeader className="bg-blue-50/50">
+                                        <TableRow>
+                                            <TableHead>PM Ticket No.</TableHead>
+                                            <TableHead>Date</TableHead>
+                                            <TableHead>Department</TableHead>
+                                            <TableHead>Machine</TableHead>
+                                            <TableHead>PM Type</TableHead>
+                                            <TableHead>Scheduled Date & Time</TableHead>
+                                            <TableHead>Actual Start Date & Time</TableHead>
+                                            <TableHead>Schedule End Date & Time</TableHead>
+                                            <TableHead>Actual End Date & Time</TableHead>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {pmTickets.map(ticket => (
+                                            <TableRow key={ticket.id}>
+                                                <TableCell className="font-medium">{ticket.id}</TableCell>
+                                                <TableCell>{ticket.date}</TableCell>
+                                                <TableCell>{ticket.dept}</TableCell>
+                                                <TableCell>{ticket.machine}</TableCell>
+                                                <TableCell>{ticket.type}</TableCell>
+                                                <TableCell>{ticket.scheduled}</TableCell>
+                                                <TableCell>{ticket.actualStart}</TableCell>
+                                                <TableCell>{ticket.scheduledEnd}</TableCell>
+                                                <TableCell>{ticket.actualEnd}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>

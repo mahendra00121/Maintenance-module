@@ -127,19 +127,19 @@ export default function BreakdownPage() {
             </div>
 
             <Tabs defaultValue="intimation" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
-                    <TabsTrigger value="intimation">Breakdown Intimation</TabsTrigger>
-                    <TabsTrigger value="maintenance">Breakdown Maintenance</TabsTrigger>
+                <TabsList className="flex flex-col sm:grid w-full sm:grid-cols-2 h-auto sm:max-w-[400px]">
+                    <TabsTrigger value="intimation" className="w-full">Breakdown Intimation</TabsTrigger>
+                    <TabsTrigger value="maintenance" className="w-full">Breakdown Maintenance</TabsTrigger>
                 </TabsList>
 
                 {/* --- 1. BREAKDOWN INTIMATION TAB --- */}
                 <TabsContent value="intimation" className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <div className="relative w-96">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="relative w-full md:w-96">
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 placeholder="Search ticket no, machine..."
-                                className="pl-8"
+                                className="pl-8 w-full"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
@@ -147,7 +147,7 @@ export default function BreakdownPage() {
 
                         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                                <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto">
                                     <Plus className="mr-2 h-4 w-4" /> Create
                                 </Button>
                             </DialogTrigger>
@@ -158,7 +158,7 @@ export default function BreakdownPage() {
                                         Create a new maintenance ticket.
                                     </DialogDescription>
                                 </DialogHeader>
-                                <div className="grid grid-cols-2 gap-6 py-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
                                     {/* Column 1 */}
                                     <div className="space-y-4">
                                         <div className="space-y-2">
@@ -260,43 +260,45 @@ export default function BreakdownPage() {
                     </div>
 
                     <Card>
-                        <Table>
-                            <TableHeader className="bg-blue-50/50">
-                                <TableRow>
-                                    <TableHead>Ticket No.</TableHead>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead>Department</TableHead>
-                                    <TableHead>Machine</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Type</TableHead>
-                                    <TableHead>Description</TableHead>
-                                    <TableHead>Reported By</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {filteredIntimationTickets.map(ticket => (
-                                    <TableRow key={ticket.id}>
-                                        <TableCell className="font-medium text-blue-600">{ticket.id}</TableCell>
-                                        <TableCell>{ticket.date}</TableCell>
-                                        <TableCell>{ticket.dept}</TableCell>
-                                        <TableCell>{ticket.machine}</TableCell>
-                                        <TableCell>{ticket.status}</TableCell>
-                                        <TableCell>{ticket.type}</TableCell>
-                                        <TableCell>{ticket.description}</TableCell>
-                                        <TableCell>{ticket.reportedBy}</TableCell>
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader className="bg-blue-50/50">
+                                    <TableRow>
+                                        <TableHead>Ticket No.</TableHead>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Department</TableHead>
+                                        <TableHead>Machine</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Description</TableHead>
+                                        <TableHead>Reported By</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {filteredIntimationTickets.map(ticket => (
+                                        <TableRow key={ticket.id}>
+                                            <TableCell className="font-medium text-blue-600">{ticket.id}</TableCell>
+                                            <TableCell>{ticket.date}</TableCell>
+                                            <TableCell>{ticket.dept}</TableCell>
+                                            <TableCell>{ticket.machine}</TableCell>
+                                            <TableCell>{ticket.status}</TableCell>
+                                            <TableCell>{ticket.type}</TableCell>
+                                            <TableCell>{ticket.description}</TableCell>
+                                            <TableCell>{ticket.reportedBy}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     </Card>
                 </TabsContent>
 
                 {/* --- 2. BREAKDOWN MAINTENANCE TAB --- */}
                 <TabsContent value="maintenance" className="space-y-4">
                     {/* Status Filters */}
-                    <div className="flex items-center space-x-6 p-4 bg-card rounded-lg border shadow-sm">
-                        <span className="font-semibold text-sm">Filter Status:</span>
-                        <RadioGroup defaultValue="all" value={maintenanceFilter} onValueChange={setMaintenanceFilter} className="flex items-center gap-6">
+                    <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-6 p-4 bg-card rounded-lg border shadow-sm">
+                        <span className="font-semibold text-sm mb-2 md:mb-0">Filter Status:</span>
+                        <RadioGroup defaultValue="all" value={maintenanceFilter} onValueChange={setMaintenanceFilter} className="flex flex-wrap items-center gap-4 md:gap-6">
                             <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="all" id="r1" />
                                 <Label htmlFor="r1">All</Label>
@@ -321,52 +323,54 @@ export default function BreakdownPage() {
                     </div>
 
                     <Card>
-                        <Table>
-                            <TableHeader className="bg-blue-50/50">
-                                <TableRow>
-                                    <TableHead>Ticket No.</TableHead>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead>Department</TableHead>
-                                    <TableHead>Machine</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Type</TableHead>
-                                    <TableHead>Description</TableHead>
-                                    <TableHead>Reported By</TableHead>
-                                    <TableHead>Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {filteredMaintenanceTickets.map(ticket => (
-                                    <TableRow key={ticket.id}>
-                                        <TableCell className="font-medium text-blue-600">{ticket.id}</TableCell>
-                                        <TableCell>{ticket.date}</TableCell>
-                                        <TableCell>{ticket.dept}</TableCell>
-                                        <TableCell>{ticket.machine}</TableCell>
-                                        <TableCell>
-                                            <Badge variant={ticket.status === "Pending" ? "outline" : "secondary"} className={ticket.status === "Pending" ? "border-amber-500 text-amber-500" : ""}>
-                                                {ticket.status}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>{ticket.type}</TableCell>
-                                        <TableCell>{ticket.description}</TableCell>
-                                        <TableCell>{ticket.reportedBy}</TableCell>
-                                        <TableCell>
-                                            <Button size="sm" variant="outline" className="h-8">
-                                                <Wrench className="h-3 w-3 mr-1" /> Process
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="outline"
-                                                className="ml-2 text-purple-600 border-purple-200 h-8 hover:bg-purple-50"
-                                                onClick={() => handleAnalyze(ticket)}
-                                            >
-                                                <Bot className="h-3 w-3 mr-1" /> Analyze
-                                            </Button>
-                                        </TableCell>
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader className="bg-blue-50/50">
+                                    <TableRow>
+                                        <TableHead>Ticket No.</TableHead>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Department</TableHead>
+                                        <TableHead>Machine</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Description</TableHead>
+                                        <TableHead>Reported By</TableHead>
+                                        <TableHead>Actions</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {filteredMaintenanceTickets.map(ticket => (
+                                        <TableRow key={ticket.id}>
+                                            <TableCell className="font-medium text-blue-600">{ticket.id}</TableCell>
+                                            <TableCell>{ticket.date}</TableCell>
+                                            <TableCell>{ticket.dept}</TableCell>
+                                            <TableCell>{ticket.machine}</TableCell>
+                                            <TableCell>
+                                                <Badge variant={ticket.status === "Pending" ? "outline" : "secondary"} className={ticket.status === "Pending" ? "border-amber-500 text-amber-500" : ""}>
+                                                    {ticket.status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>{ticket.type}</TableCell>
+                                            <TableCell>{ticket.description}</TableCell>
+                                            <TableCell>{ticket.reportedBy}</TableCell>
+                                            <TableCell>
+                                                <Button size="sm" variant="outline" className="h-8">
+                                                    <Wrench className="h-3 w-3 mr-1" /> Process
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="ml-2 text-purple-600 border-purple-200 h-8 hover:bg-purple-50"
+                                                    onClick={() => handleAnalyze(ticket)}
+                                                >
+                                                    <Bot className="h-3 w-3 mr-1" /> Analyze
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     </Card>
 
                     {/* Analysis Dialog */}

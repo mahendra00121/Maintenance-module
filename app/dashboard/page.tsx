@@ -122,8 +122,8 @@ export default function DashboardPage() {
                 </Card>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4 glass-card">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-1 md:col-span-2 lg:col-span-4 glass-card">
                     <CardHeader>
                         <CardTitle>Weekly Breakdown Trend</CardTitle>
                         <CardDescription>
@@ -160,7 +160,7 @@ export default function DashboardPage() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="col-span-3 glass-card">
+                <Card className="col-span-1 md:col-span-2 lg:col-span-3 glass-card">
                     <CardHeader>
                         <CardTitle>Ticket Status Distribution</CardTitle>
                         <CardDescription>

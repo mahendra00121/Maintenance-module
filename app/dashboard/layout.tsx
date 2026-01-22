@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,7 @@ const navItems = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
         <div className="flex min-h-screen w-full bg-muted/10">
@@ -103,7 +105,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex flex-1 flex-col">
                 {/* Mobile Header */}
                 <header className="flex h-16 items-center gap-4 border-b bg-background px-6 lg:hidden sticky top-0 z-50">
-                    <Sheet>
+                    <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                         <SheetTrigger asChild>
                             <Button variant="outline" size="icon" className="shrink-0 lg:hidden">
                                 <Menu className="h-5 w-5" />
@@ -121,7 +123,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 {navItems.map((item) => {
                                     const isActive = pathname === item.href;
                                     return (
-                                        <Link key={item.href} href={item.href}>
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                        >
                                             <span
                                                 className={`group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-muted ${isActive ? "bg-primary/10 text-primary" : "text-muted-foreground"
                                                     }`}
@@ -141,7 +147,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </header>
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto p-6 md:p-8">
+                <main className="flex-1 overflow-y-auto p-4 md:p-8 min-w-0">
                     {children}
                 </main>
             </div>
