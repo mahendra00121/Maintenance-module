@@ -16,11 +16,12 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
+    DialogClose
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, Bot, Wrench } from "lucide-react";
+import { Plus, Search, Bot, Wrench, X } from "lucide-react";
 
 interface BreakdownTicket {
     id: string;
@@ -46,6 +47,11 @@ export default function BreakdownPage() {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analysisResult, setAnalysisResult] = useState<string | null>(null);
     const [selectedTicketForAnalysis, setSelectedTicketForAnalysis] = useState<BreakdownTicket | null>(null);
+
+    // Process/Maintenance Dialog State
+    const [isProcessOpen, setIsProcessOpen] = useState(false);
+    const [selectedTicket, setSelectedTicket] = useState<BreakdownTicket | null>(null);
+
 
     // Mock Data
     const [tickets, setTickets] = useState<BreakdownTicket[]>([
@@ -87,7 +93,8 @@ export default function BreakdownPage() {
         setNewTicket({ dept: "", machine: "", description: "", machineStatus: "", type: "", priority: "" });
     };
 
-    const handleAnalyze = (ticket: BreakdownTicket) => {
+    const handleAnalyze = (ticket: BreakdownTicket, e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent row click
         setSelectedTicketForAnalysis(ticket);
         setIsAnalysisOpen(true);
         setIsAnalyzing(true);
@@ -100,6 +107,49 @@ export default function BreakdownPage() {
         }, 2000);
     };
 
+    // --- Process Dialog Handlers ---
+    const handleRowDoubleClick = (ticket: BreakdownTicket) => {
+        setSelectedTicket(ticket);
+        setIsProcessOpen(true);
+    };
+
+    const handleStartMaintenance = () => {
+        if (selectedTicket) {
+            setTickets(tickets.map(t =>
+                t.id === selectedTicket.id ? { ...t, status: "Pending" } : t
+            ));
+            setIsProcessOpen(false);
+        }
+    };
+
+    const handleSaveAndContinue = () => {
+        if (selectedTicket) {
+            setTickets(tickets.map(t =>
+                t.id === selectedTicket.id ? { ...t, status: "Open" } : t
+            ));
+            setIsProcessOpen(false);
+        }
+    };
+
+    const handleMaintenanceEnd = () => {
+        if (selectedTicket) {
+            setTickets(tickets.map(t =>
+                t.id === selectedTicket.id ? { ...t, status: "Maintenance End" } : t
+            ));
+            setIsProcessOpen(false);
+        }
+    };
+
+    const handleCloseTicket = () => {
+        if (selectedTicket) {
+            setTickets(tickets.map(t =>
+                t.id === selectedTicket.id ? { ...t, status: "Closed" } : t
+            ));
+            setIsProcessOpen(false);
+        }
+    };
+
+
     // Filter Logic
     const filteredIntimationTickets = tickets.filter(t =>
         t.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -108,6 +158,7 @@ export default function BreakdownPage() {
 
     const filteredMaintenanceTickets = tickets.filter(t => {
         if (maintenanceFilter === "all") return true;
+        if (maintenanceFilter === "reported") return t.status === "Stopped" || t.status === "Running";
         if (maintenanceFilter === "pending") return t.status === "Pending";
         if (maintenanceFilter === "open") return t.status === "Open";
         if (maintenanceFilter === "end") return t.status === "Maintenance End";
@@ -260,7 +311,7 @@ export default function BreakdownPage() {
                     </div>
 
                     <Card>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto max-w-[85vw] md:max-w-full">
                             <Table>
                                 <TableHeader className="bg-blue-50/50">
                                     <TableRow>
@@ -272,6 +323,7 @@ export default function BreakdownPage() {
                                         <TableHead>Type</TableHead>
                                         <TableHead>Description</TableHead>
                                         <TableHead>Reported By</TableHead>
+                                        <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -304,6 +356,10 @@ export default function BreakdownPage() {
                                 <Label htmlFor="r1">All</Label>
                             </div>
                             <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="reported" id="r_reported" />
+                                <Label htmlFor="r_reported">Reported (New)</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="pending" id="r2" />
                                 <Label htmlFor="r2">Pending</Label>
                             </div>
@@ -323,7 +379,7 @@ export default function BreakdownPage() {
                     </div>
 
                     <Card>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto max-w-[85vw] md:max-w-full">
                             <Table>
                                 <TableHeader className="bg-blue-50/50">
                                     <TableRow>
@@ -340,7 +396,11 @@ export default function BreakdownPage() {
                                 </TableHeader>
                                 <TableBody>
                                     {filteredMaintenanceTickets.map(ticket => (
-                                        <TableRow key={ticket.id}>
+                                        <TableRow
+                                            key={ticket.id}
+                                            onDoubleClick={() => handleRowDoubleClick(ticket)}
+                                            className="cursor-pointer hover:bg-slate-50 transition-colors"
+                                        >
                                             <TableCell className="font-medium text-blue-600">{ticket.id}</TableCell>
                                             <TableCell>{ticket.date}</TableCell>
                                             <TableCell>{ticket.dept}</TableCell>
@@ -354,14 +414,14 @@ export default function BreakdownPage() {
                                             <TableCell>{ticket.description}</TableCell>
                                             <TableCell>{ticket.reportedBy}</TableCell>
                                             <TableCell>
-                                                <Button size="sm" variant="outline" className="h-8">
+                                                <Button size="sm" variant="outline" className="h-8" onClick={(e) => { e.stopPropagation(); handleRowDoubleClick(ticket); }}>
                                                     <Wrench className="h-3 w-3 mr-1" /> Process
                                                 </Button>
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
                                                     className="ml-2 text-purple-600 border-purple-200 h-8 hover:bg-purple-50"
-                                                    onClick={() => handleAnalyze(ticket)}
+                                                    onClick={(e) => handleAnalyze(ticket, e)}
                                                 >
                                                     <Bot className="h-3 w-3 mr-1" /> Analyze
                                                 </Button>
@@ -400,6 +460,168 @@ export default function BreakdownPage() {
                             <DialogFooter>
                                 <Button onClick={() => setIsAnalysisOpen(false)}>Close</Button>
                             </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    {/* Process / Breakdown Maintenance Dialog (Double Click) */}
+                    <Dialog open={isProcessOpen} onOpenChange={setIsProcessOpen}>
+                        <DialogContent className="max-w-none sm:max-w-none w-screen h-screen max-h-screen bg-white p-6 m-0 rounded-none shadow-none border-0 overflow-y-auto [&>button]:hidden">
+                            {/* Custom Header with Close Button */}
+                            <div className="flex items-center justify-between pb-4 border-b">
+                                <div className="flex-1 flex justify-center">
+                                    <DialogTitle className="text-xl font-bold text-center">Breakdown Maintenance</DialogTitle>
+                                </div>
+                                <Button
+                                    size="icon"
+                                    className="bg-red-500 hover:bg-red-600 text-white rounded-md h-8 w-8"
+                                    onClick={() => setIsProcessOpen(false)}
+                                >
+                                    <X className="h-5 w-5" />
+                                </Button>
+                            </div>
+
+                            {selectedTicket && (
+                                <div className="space-y-6 pt-6">
+                                    {/* Header Info Grid - Custom Layout to match image */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        {/* Row 1 */}
+                                        <div className="space-y-1">
+                                            <Label className="font-bold text-sm">Maintenance Ticket No.</Label>
+                                            <Input value={selectedTicket.id} readOnly className="bg-white" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label className="font-bold text-sm">Date</Label>
+                                            <Input value={selectedTicket.date} readOnly className="bg-white" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label className="font-bold text-sm">Department</Label>
+                                            <Select value={selectedTicket.dept} disabled>
+                                                <SelectTrigger className="bg-white">
+                                                    <SelectValue placeholder="Department" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value={selectedTicket.dept}>{selectedTicket.dept}</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        {/* Row 2 - Machine on its own line essentially in the first column of next logical row */}
+                                        <div className="space-y-1">
+                                            <Label className="font-bold text-sm">Machine</Label>
+                                            <Select value={selectedTicket.machine} disabled>
+                                                <SelectTrigger className="bg-white">
+                                                    <SelectValue placeholder="Machine" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value={selectedTicket.machine}>{selectedTicket.machine}</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+
+                                    {/* Maintenance Details Section */}
+                                    <div className="space-y-2">
+                                        <h3 className="font-bold text-sm border-b-2 border-slate-200 inline-block pb-1">Maintenance Details</h3>
+                                        <div className="border border-slate-200">
+                                            <Table>
+                                                <TableHeader className="bg-blue-100">
+                                                    <TableRow className="hover:bg-blue-100 border-b border-blue-200">
+                                                        <TableHead className="w-[100px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Machine Status</TableHead>
+                                                        <TableHead className="w-[80px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Priority</TableHead>
+                                                        <TableHead className="w-[100px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Breakdown Type</TableHead>
+                                                        <TableHead className="min-w-[200px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Breakdown Description</TableHead>
+                                                        <TableHead className="w-[120px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Reported By</TableHead>
+                                                        <TableHead className="w-[120px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Assign To</TableHead>
+                                                        <TableHead className="w-[100px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Breakdown Start Time</TableHead>
+                                                        <TableHead className="w-[100px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Breakdown End Time</TableHead>
+                                                        <TableHead className="min-w-[150px] text-black font-semibold text-xs h-10 border-r border-blue-200 text-center">Maintenance Complete Remarks</TableHead>
+                                                        <TableHead className="min-w-[150px] text-black font-semibold text-xs h-10 text-center">Operator Close Remarks</TableHead>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+                                                    <TableRow className="hover:bg-transparent">
+                                                        <TableCell className="p-2 border-r text-center text-xs">{selectedTicket.status}</TableCell>
+                                                        <TableCell className="p-2 border-r text-center text-xs">{selectedTicket.priority}</TableCell>
+                                                        <TableCell className="p-2 border-r text-center text-xs">{selectedTicket.type}</TableCell>
+                                                        <TableCell className="p-2 border-r text-xs">{selectedTicket.description}</TableCell>
+                                                        <TableCell className="p-2 border-r text-xs">{selectedTicket.reportedBy}</TableCell>
+                                                        <TableCell className="p-1 border-r"><Input className="h-7 w-full text-xs" /></TableCell>
+                                                        <TableCell className="p-1 border-r"><Input className="h-7 w-full text-xs px-1" /></TableCell>
+                                                        <TableCell className="p-1 border-r"><Input className="h-7 w-full text-xs px-1" disabled /></TableCell>
+                                                        <TableCell className="p-1 border-r"><Input className="h-7 w-full text-xs" disabled /></TableCell>
+                                                        <TableCell className="p-1">
+                                                            <div className="flex items-center gap-1">
+                                                                <Input className="h-7 w-full text-xs" disabled />
+                                                                <Button size="icon" className="h-7 w-7 bg-blue-900 shrink-0 rounded-sm hover:bg-blue-800"><Plus className="h-4 w-4" /></Button>
+                                                            </div>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </TableBody>
+                                            </Table>
+                                        </div>
+                                    </div>
+
+                                    {/* Footer Actions */}
+                                    <div className="flex items-end justify-between pt-8">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-bold text-sm text-slate-700">Add Inventory</span>
+                                            <Button size="icon" className="h-8 w-8 bg-blue-900 rounded-sm hover:bg-blue-800">
+                                                <Plus className="h-5 w-5" />
+                                            </Button>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            {/* Status: Initial State (Stopped/Running) -> Show "Start" */}
+                                            {(selectedTicket.status === "Stopped" || selectedTicket.status === "Running") && (
+                                                <Button
+                                                    className="bg-blue-900 hover:bg-blue-800 text-white min-w-[100px] font-semibold"
+                                                    onClick={handleStartMaintenance}
+                                                >
+                                                    Start
+                                                </Button>
+                                            )}
+
+                                            {/* Status: Pending -> Show "Save & Continue" and "Maintenance End" */}
+                                            {selectedTicket.status === "Pending" && (
+                                                <>
+                                                    <Button
+                                                        className="bg-green-600 hover:bg-green-700 text-white min-w-[100px] font-semibold"
+                                                        onClick={handleSaveAndContinue}
+                                                    >
+                                                        Save & Continue
+                                                    </Button>
+                                                    <Button
+                                                        className="bg-red-600 hover:bg-red-700 text-white min-w-[100px] font-semibold"
+                                                        onClick={handleMaintenanceEnd}
+                                                    >
+                                                        Maintenance End
+                                                    </Button>
+                                                </>
+                                            )}
+
+                                            {/* Status: Open -> Show "Maintenance End" */}
+                                            {selectedTicket.status === "Open" && (
+                                                <Button
+                                                    className="bg-red-600 hover:bg-red-700 text-white min-w-[100px] font-semibold"
+                                                    onClick={handleMaintenanceEnd}
+                                                >
+                                                    Maintenance End
+                                                </Button>
+                                            )}
+
+                                            {/* Status: Maintenance End -> Show "Close Ticket" */}
+                                            {selectedTicket.status === "Maintenance End" && (
+                                                <Button
+                                                    className="bg-slate-800 hover:bg-slate-900 text-white min-w-[100px] font-semibold"
+                                                    onClick={handleCloseTicket}
+                                                >
+                                                    Close Ticket
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </DialogContent>
                     </Dialog>
                 </TabsContent>

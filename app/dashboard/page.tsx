@@ -131,7 +131,7 @@ export default function DashboardPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="pl-2">
-                        <div className="h-[300px] w-full">
+                        <div className="h-[300px] w-full min-w-0">
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={dataTrend}>
                                     <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
@@ -168,7 +168,7 @@ export default function DashboardPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-[300px] w-full">
+                        <div className="h-[300px] w-full min-w-0">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie

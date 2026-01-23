@@ -223,7 +223,7 @@ export default function PMPage() {
                         </CardHeader>
                         <CardContent>
                             {/* Calendar Grid Simulation */}
-                            <div className="overflow-x-auto">
+                            <div className="overflow-x-auto max-w-[85vw] md:max-w-full">
                                 <div className="border rounded-md min-w-[600px] overflow-hidden bg-white">
                                     <div className="grid grid-cols-7 bg-blue-100 divide-x text-center font-semibold text-sm py-2 text-blue-900">
                                         <div>Monday</div>
@@ -287,7 +287,7 @@ export default function PMPage() {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="overflow-x-auto">
+                            <div className="overflow-x-auto max-w-[85vw] md:max-w-full">
                                 <Table>
                                     <TableHeader className="bg-blue-50/50">
                                         <TableRow>
@@ -354,7 +354,7 @@ export default function PMPage() {
 
                     <Card>
                         <CardContent className="pt-6">
-                            <div className="overflow-x-auto">
+                            <div className="overflow-x-auto max-w-[85vw] md:max-w-full">
                                 <Table>
                                     <TableHeader className="bg-blue-50/50">
                                         <TableRow>

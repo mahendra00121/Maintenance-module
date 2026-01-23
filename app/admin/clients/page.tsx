@@ -31,93 +31,95 @@ export default function ClientManagementPage() {
             </div>
 
             <Card>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Client Name</TableHead>
-                            <TableHead>Owner</TableHead>
-                            <TableHead>Plan</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Expiry Date</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell className="font-medium">Acme Printing Ltd.</TableCell>
-                            <TableCell>John Doe</TableCell>
-                            <TableCell>Professional</TableCell>
-                            <TableCell>
-                                <Badge className="bg-green-600 hover:bg-green-700">Active</Badge>
-                            </TableCell>
-                            <TableCell>Dec 31, 2024</TableCell>
-                            <TableCell className="text-right">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon">
-                                            <MoreHorizontal className="h-4 w-4" />
-                                            <span className="sr-only">Actions</span>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                                        <DropdownMenuItem>Renew Subscription</DropdownMenuItem>
-                                        <DropdownMenuItem className="text-destructive">Deactivate</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium">Global Press Inc.</TableCell>
-                            <TableCell>Jane Smith</TableCell>
-                            <TableCell>Enterprise</TableCell>
-                            <TableCell>
-                                <Badge className="bg-green-600 hover:bg-green-700">Active</Badge>
-                            </TableCell>
-                            <TableCell>Jun 30, 2025</TableCell>
-                            <TableCell className="text-right">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon">
-                                            <MoreHorizontal className="h-4 w-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                                        <DropdownMenuItem>Renew Subscription</DropdownMenuItem>
-                                        <DropdownMenuItem className="text-destructive">Deactivate</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium">FastPrint Co.</TableCell>
-                            <TableCell>Mike Johnson</TableCell>
-                            <TableCell>Starter</TableCell>
-                            <TableCell>
-                                <Badge variant="destructive">Expired</Badge>
-                            </TableCell>
-                            <TableCell>Jan 01, 2024</TableCell>
-                            <TableCell className="text-right">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon">
-                                            <MoreHorizontal className="h-4 w-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                                        <DropdownMenuItem>Renew Subscription</DropdownMenuItem>
-                                        <DropdownMenuItem className="text-destructive">Delete Client</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Client Name</TableHead>
+                                <TableHead>Owner</TableHead>
+                                <TableHead>Plan</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Expiry Date</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className="font-medium">Acme Printing Ltd.</TableCell>
+                                <TableCell>John Doe</TableCell>
+                                <TableCell>Professional</TableCell>
+                                <TableCell>
+                                    <Badge className="bg-green-600 hover:bg-green-700">Active</Badge>
+                                </TableCell>
+                                <TableCell>Dec 31, 2024</TableCell>
+                                <TableCell className="text-right">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                                <span className="sr-only">Actions</span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                                            <DropdownMenuItem>Renew Subscription</DropdownMenuItem>
+                                            <DropdownMenuItem className="text-destructive">Deactivate</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">Global Press Inc.</TableCell>
+                                <TableCell>Jane Smith</TableCell>
+                                <TableCell>Enterprise</TableCell>
+                                <TableCell>
+                                    <Badge className="bg-green-600 hover:bg-green-700">Active</Badge>
+                                </TableCell>
+                                <TableCell>Jun 30, 2025</TableCell>
+                                <TableCell className="text-right">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                                            <DropdownMenuItem>Renew Subscription</DropdownMenuItem>
+                                            <DropdownMenuItem className="text-destructive">Deactivate</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">FastPrint Co.</TableCell>
+                                <TableCell>Mike Johnson</TableCell>
+                                <TableCell>Starter</TableCell>
+                                <TableCell>
+                                    <Badge variant="destructive">Expired</Badge>
+                                </TableCell>
+                                <TableCell>Jan 01, 2024</TableCell>
+                                <TableCell className="text-right">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                                            <DropdownMenuItem>Renew Subscription</DropdownMenuItem>
+                                            <DropdownMenuItem className="text-destructive">Delete Client</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </div>
             </Card>
         </div>
     );

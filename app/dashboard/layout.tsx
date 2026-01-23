@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import {
     Activity,
     BarChart3,
@@ -113,6 +113,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" className="w-64 p-0">
+                            <SheetTitle className="hidden">Navigation Menu</SheetTitle>
                             <div className="flex h-16 items-center border-b px-6">
                                 <Link className="flex items-center gap-2 font-bold text-xl" href="/dashboard">
                                     <Activity className="h-6 w-6 text-primary" />

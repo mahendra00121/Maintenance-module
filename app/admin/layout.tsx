@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import {
     BarChart3,
     LayoutDashboard,
@@ -94,6 +94,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" className="w-64 p-0">
+                            <SheetTitle className="hidden">Admin Navigation Menu</SheetTitle>
                             <div className="flex h-16 items-center border-b px-6">
                                 <Link className="flex items-center gap-2 font-bold text-xl" href="/admin">
                                     <ShieldAlert className="h-6 w-6 text-red-600" />
@@ -124,7 +125,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </header>
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto p-6 md:p-8">
+                <main className="flex-1 overflow-y-auto min-w-0 p-4 md:p-8">
                     {children}
                 </main>
             </div>
