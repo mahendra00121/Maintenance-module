@@ -166,6 +166,19 @@ export default function BreakdownPage() {
         return true;
     });
 
+    // Helper for Status Badge Colors
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case "Stopped": return "bg-red-100 text-red-700 border-red-200 hover:bg-red-100";
+            case "Running": return "bg-green-100 text-green-700 border-green-200 hover:bg-green-100";
+            case "Pending": return "bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-100";
+            case "Open": return "bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-100";
+            case "Maintenance End": return "bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-100";
+            case "Closed": return "bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-100";
+            default: return "bg-gray-100 text-gray-700 hover:bg-gray-100";
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -333,7 +346,11 @@ export default function BreakdownPage() {
                                             <TableCell>{ticket.date}</TableCell>
                                             <TableCell>{ticket.dept}</TableCell>
                                             <TableCell>{ticket.machine}</TableCell>
-                                            <TableCell>{ticket.status}</TableCell>
+                                            <TableCell>
+                                                <Badge variant="outline" className={`${getStatusColor(ticket.status)} border`}>
+                                                    {ticket.status}
+                                                </Badge>
+                                            </TableCell>
                                             <TableCell>{ticket.type}</TableCell>
                                             <TableCell>{ticket.description}</TableCell>
                                             <TableCell>{ticket.reportedBy}</TableCell>
@@ -406,7 +423,7 @@ export default function BreakdownPage() {
                                             <TableCell>{ticket.dept}</TableCell>
                                             <TableCell>{ticket.machine}</TableCell>
                                             <TableCell>
-                                                <Badge variant={ticket.status === "Pending" ? "outline" : "secondary"} className={ticket.status === "Pending" ? "border-amber-500 text-amber-500" : ""}>
+                                                <Badge variant="outline" className={`${getStatusColor(ticket.status)} border`}>
                                                     {ticket.status}
                                                 </Badge>
                                             </TableCell>
@@ -541,7 +558,11 @@ export default function BreakdownPage() {
                                                 </TableHeader>
                                                 <TableBody>
                                                     <TableRow className="hover:bg-transparent">
-                                                        <TableCell className="p-2 border-r text-center text-xs">{selectedTicket.status}</TableCell>
+                                                        <TableCell className="p-2 border-r text-center text-xs">
+                                                            <Badge variant="outline" className={`text-[10px] px-1 py-0 h-5 ${getStatusColor(selectedTicket.status)} border`}>
+                                                                {selectedTicket.status}
+                                                            </Badge>
+                                                        </TableCell>
                                                         <TableCell className="p-2 border-r text-center text-xs">{selectedTicket.priority}</TableCell>
                                                         <TableCell className="p-2 border-r text-center text-xs">{selectedTicket.type}</TableCell>
                                                         <TableCell className="p-2 border-r text-xs">{selectedTicket.description}</TableCell>

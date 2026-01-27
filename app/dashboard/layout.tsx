@@ -17,6 +17,7 @@ import {
     CalendarClock
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const navItems = [
     {
@@ -85,6 +86,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     })}
                 </nav>
                 <div className="border-t p-4">
+                    <div className="flex items-center justify-between px-2 mb-4">
+                        <span className="text-sm font-medium text-muted-foreground">Theme</span>
+                        <ModeToggle />
+                    </div>
                     <div className="flex items-center gap-3 px-2 py-2 mb-2">
                         <Avatar className="h-9 w-9 border">
                             <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
@@ -145,6 +150,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <div className="w-full flex-1">
                         <span className="font-semibold lg:hidden">Dashboard</span>
                     </div>
+                    <ModeToggle />
                 </header>
 
                 {/* Main Content */}

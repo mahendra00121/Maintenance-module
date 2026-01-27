@@ -1,7 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 // Imports removed to prevent build errors
 // Inline components used instead
 import {
@@ -10,7 +17,11 @@ import {
     Clock,
     Users,
     ArrowUpRight,
-    TrendingDown
+    TrendingDown,
+    LineChart as LineChartIcon,
+    BarChart3 as BarChartIcon,
+    PieChart as PieChartIcon,
+    MoreVertical
 } from "lucide-react";
 
 // Inline Chart Components to avoid multiple file complexities for now, 
@@ -26,7 +37,9 @@ import {
     PieChart,
     Pie,
     Cell,
-    Legend
+    Legend,
+    BarChart,
+    Bar
 } from 'recharts';
 
 const dataTrend = [
@@ -47,8 +60,18 @@ const dataStatus = [
 ];
 
 const COLORS = ['#f87171', '#fbbf24', '#34d399', '#94a3b8'];
+const TREND_COLORS = ['#8884d8', '#82ca9d'];
 
 export default function DashboardPage() {
+    const [trendChartType, setTrendChartType] = useState<'line' | 'bar' | 'pie'>('line');
+    const [statusChartType, setStatusChartType] = useState<'pie' | 'bar'>('pie');
+
+    // Aggregate data for Pie Chart view of Trend
+    const trendPieData = [
+        { name: 'Total Breakdowns', value: dataTrend.reduce((acc, curr) => acc + curr.breakdowns, 0) },
+        { name: 'Total PM', value: dataTrend.reduce((acc, curr) => acc + curr.pm, 0) }
+    ];
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -124,72 +147,195 @@ export default function DashboardPage() {
 
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-1 md:col-span-2 lg:col-span-4 glass-card">
-                    <CardHeader>
-                        <CardTitle>Weekly Breakdown Trend</CardTitle>
-                        <CardDescription>
-                            Number of breakdown vs PM tickets over the last 7 days.
-                        </CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle>Weekly Breakdown Trend</CardTitle>
+                            <CardDescription>
+                                Number of breakdown vs PM tickets over the last 7 days.
+                            </CardDescription>
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                    <MoreVertical className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => setTrendChartType('line')}>
+                                    <LineChartIcon className="mr-2 h-4 w-4" />
+                                    <span>Line Chart</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTrendChartType('bar')}>
+                                    <BarChartIcon className="mr-2 h-4 w-4" />
+                                    <span>Bar Chart</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTrendChartType('pie')}>
+                                    <PieChartIcon className="mr-2 h-4 w-4" />
+                                    <span>Pie Chart</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </CardHeader>
                     <CardContent className="pl-2">
                         <div className="h-[300px] w-full min-w-0">
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={dataTrend}>
-                                    <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
-                                    <XAxis
-                                        dataKey="name"
-                                        stroke="#888888"
-                                        fontSize={12}
-                                        tickLine={false}
-                                        axisLine={false}
-                                    />
-                                    <YAxis
-                                        stroke="#888888"
-                                        fontSize={12}
-                                        tickLine={false}
-                                        axisLine={false}
-                                        tickFormatter={(value) => `${value}`}
-                                    />
-                                    <Tooltip
-                                        contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px' }}
-                                        itemStyle={{ color: 'var(--foreground)' }}
-                                    />
-                                    <Line type="monotone" dataKey="breakdowns" stroke="#8884d8" strokeWidth={2} activeDot={{ r: 8 }} />
-                                    <Line type="monotone" dataKey="pm" stroke="#82ca9d" strokeWidth={2} />
-                                </LineChart>
+                                {trendChartType === 'line' ? (
+                                    <LineChart data={dataTrend}>
+                                        <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
+                                        <XAxis
+                                            dataKey="name"
+                                            stroke="#888888"
+                                            fontSize={12}
+                                            tickLine={false}
+                                            axisLine={false}
+                                        />
+                                        <YAxis
+                                            stroke="#888888"
+                                            fontSize={12}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickFormatter={(value) => `${value}`}
+                                        />
+                                        <Tooltip
+                                            contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px' }}
+                                            itemStyle={{ color: 'var(--foreground)' }}
+                                        />
+                                        <Legend />
+                                        <Line type="monotone" dataKey="breakdowns" stroke="#8884d8" strokeWidth={2} activeDot={{ r: 8 }} />
+                                        <Line type="monotone" dataKey="pm" stroke="#82ca9d" strokeWidth={2} />
+                                    </LineChart>
+                                ) : trendChartType === 'bar' ? (
+                                    <BarChart data={dataTrend}>
+                                        <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
+                                        <XAxis
+                                            dataKey="name"
+                                            stroke="#888888"
+                                            fontSize={12}
+                                            tickLine={false}
+                                            axisLine={false}
+                                        />
+                                        <YAxis
+                                            stroke="#888888"
+                                            fontSize={12}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickFormatter={(value) => `${value}`}
+                                        />
+                                        <Tooltip
+                                            cursor={{ fill: 'var(--muted)' }}
+                                            contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px' }}
+                                            itemStyle={{ color: 'var(--foreground)' }}
+                                        />
+                                        <Legend />
+                                        <Bar dataKey="breakdowns" fill="#8884d8" radius={[4, 4, 0, 0]} />
+                                        <Bar dataKey="pm" fill="#82ca9d" radius={[4, 4, 0, 0]} />
+                                    </BarChart>
+                                ) : (
+                                    <PieChart>
+                                        <Pie
+                                            data={trendPieData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={90}
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {trendPieData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={TREND_COLORS[index % TREND_COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px' }}
+                                            itemStyle={{ color: 'var(--foreground)' }}
+                                        />
+                                        <Legend verticalAlign="bottom" height={36} />
+                                    </PieChart>
+                                )}
                             </ResponsiveContainer>
                         </div>
                     </CardContent>
                 </Card>
                 <Card className="col-span-1 md:col-span-2 lg:col-span-3 glass-card">
-                    <CardHeader>
-                        <CardTitle>Ticket Status Distribution</CardTitle>
-                        <CardDescription>
-                            Current status of all active tickets.
-                        </CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle>Ticket Status Distribution</CardTitle>
+                            <CardDescription>
+                                Current status of all active tickets.
+                            </CardDescription>
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                    <MoreVertical className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => setStatusChartType('pie')}>
+                                    <PieChartIcon className="mr-2 h-4 w-4" />
+                                    <span>Pie Chart</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setStatusChartType('bar')}>
+                                    <BarChartIcon className="mr-2 h-4 w-4" />
+                                    <span>Bar Chart</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </CardHeader>
                     <CardContent>
                         <div className="h-[300px] w-full min-w-0">
                             <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={dataStatus}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {dataStatus.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px' }}
-                                        itemStyle={{ color: 'var(--foreground)' }}
-                                    />
-                                    <Legend verticalAlign="bottom" height={36} />
-                                </PieChart>
+                                {statusChartType === 'pie' ? (
+                                    <PieChart>
+                                        <Pie
+                                            data={dataStatus}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {dataStatus.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px' }}
+                                            itemStyle={{ color: 'var(--foreground)' }}
+                                        />
+                                        <Legend verticalAlign="bottom" height={36} />
+                                    </PieChart>
+                                ) : (
+                                    <BarChart data={dataStatus}>
+                                        <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
+                                        <XAxis
+                                            dataKey="name"
+                                            stroke="#888888"
+                                            fontSize={12}
+                                            tickLine={false}
+                                            axisLine={false}
+                                        />
+                                        <YAxis
+                                            stroke="#888888"
+                                            fontSize={12}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickFormatter={(value) => `${value}`}
+                                        />
+                                        <Tooltip
+                                            cursor={{ fill: 'var(--muted)' }}
+                                            contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px' }}
+                                            itemStyle={{ color: 'var(--foreground)' }}
+                                        />
+                                        <Legend />
+                                        <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                                            {dataStatus.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                )}
                             </ResponsiveContainer>
                         </div>
                     </CardContent>
